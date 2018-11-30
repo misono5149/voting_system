@@ -62,6 +62,7 @@ func VoterVoting(electionid, candidateid int) error {
 	return err
 }
 
+/*
 // return 값: election_id, elected_candidate_id, all_vote, 해당 선거 후보자 결과 리스트
 func VoterGetElectionResult(electionid int) (int, int, int, models.EndElectionResult) {
 	var endElectionResult models.EndElectionResult
@@ -96,4 +97,27 @@ func VoterGetElectionResult(electionid int) (int, int, int, models.EndElectionRe
 		Find(&endElectionResult)
 
 	return endElection.Id, electedCandidate.ElectionId, all_vote, endElectionResult
+}
+*/
+
+func VoterGetElectionResult() models.Elections {
+	var endElections models.Elections
+
+	db := votingdb
+	db.Where("state=?", 3).
+		Find(&endElections)
+
+	return endElections
+}
+
+func VoterGetElectionResultCandidate(election_id int) models.EndElectionResult {
+	var candidates models.EndElectionResult
+
+	db := votingdb
+	db.Model(&models.EndElectionCandidateInfo{}).
+		Where("election_id=?", electionid).
+		Order("desc poll").
+		Find(&candidates)
+
+	return candidates
 }

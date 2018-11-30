@@ -9,7 +9,11 @@ import (
 )
 
 func GetConnection() *gorm.DB {
+<<<<<<< HEAD
 	db, err := gorm.Open("mysql", "root:12345678tcp(127.0.0.1:3306)/votingDB?charset=utf8&parseTime=True&loc=Local")
+=======
+	db, err := gorm.Open("mysql", "root:root@tcp(127.0.0.1:3306)/votingDB?charset=utf8&parseTime=True&loc=Local")
+>>>>>>> bc16028d29bb101e83807ee9e9390dded852b621
 	if err != nil {
 		panic("failed to connect database")
 	}

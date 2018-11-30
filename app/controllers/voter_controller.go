@@ -120,24 +120,22 @@ func VoterVoting(c *gin.Context) {
 }
 
 func VoterGetElectionResult(c *gin.Context) {
-	electionId, err := strconv.Atoi(c.Params.ByName("electionid"))
-	if err != nil {
-		panic(err)
-	}
+	endElections := services.AdminElectionResult()
 
-	electionId, electedCandidateId, all_vote, candidateList := services.VoterGetElectionResult(electionId)
-	if err != nil {
+	if len(endElections) <= 0 {
 		c.JSON(404, gin.H{
 			"status": 404,
-			"error":  "해당 투표 결과를 가져오지 못했습니다",
+			"error":  "완료된 선거가 없습니다",
 		})
 	} else {
-		c.JSON(200, gin.H{
-			"status":               200,
-			"election_id":          electionId,
-			"elected_candidate_id": electedCandidateId,
-			"all_vote":             all_vote,
-			"candidate":            candidateList,
-		})
+		for i := 0; i < len(endElections); i++ {
+			var results models.EndElectionResult
+			results = services.AdminElectionResultCandidates(endElections[i].Id)
+			c.JSON(200, gin.H{
+				"status":        200,
+				"election_info": endElections[i],
+				"result":        results,
+			})
+		}
 	}
 }
