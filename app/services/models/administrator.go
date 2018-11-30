@@ -1,7 +1,7 @@
 package models
 
 type Administrator struct {
-	Id        string `json:"id"`
+	Id        string `json:"id" gorm:"primary_key, auto_increment, default=0"`
 	Password  string `json:"password"`
 	Name      string `json:"name"`
 	Mobile    string `json:"mobile"`

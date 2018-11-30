@@ -75,8 +75,8 @@ func VoterGetElectionCandidatesList(c *gin.Context) {
 		})
 	} else {
 		c.JSON(200, gin.H{
-			"status": 200,
-			"list":   list,
+			"status":    200,
+			"candidate": list,
 		})
 	}
 }

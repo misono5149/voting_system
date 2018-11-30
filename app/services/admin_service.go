@@ -41,6 +41,8 @@ func AdminGetElectionInfo(id int) models.Election {
 }
 
 func AdminCreateElection(election models.Election) (models.Election, error) {
+	//var t1, t2 time.Time
+
 	record := models.Election{
 		Title:             election.Title,
 		Major:             election.Major,
