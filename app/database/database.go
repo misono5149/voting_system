@@ -9,11 +9,8 @@ import (
 )
 
 func GetConnection() *gorm.DB {
-<<<<<<< HEAD
-	db, err := gorm.Open("mysql", "root:12345678tcp(127.0.0.1:3306)/votingDB?charset=utf8&parseTime=True&loc=Local")
-=======
-	db, err := gorm.Open("mysql", "root:root@tcp(127.0.0.1:3306)/votingDB?charset=utf8&parseTime=True&loc=Local")
->>>>>>> bc16028d29bb101e83807ee9e9390dded852b621
+	db, err := gorm.Open("mysql", "root:12345678@tcp(127.0.0.1:3306)/votingDB?charset=utf8&parseTime=True&loc=Local")
+
 	if err != nil {
 		panic("failed to connect database")
 	}
@@ -55,7 +52,7 @@ func AddForeignKeys(db *gorm.DB) {
 func AutoPopulate(db *gorm.DB) {
 	PopulateAdmins(db)
 	PopulateVoters(db)
-	//PopulateElection(db)
+	PopulateElection(db)
 	PopulateCandidates(db)
 }
 
@@ -113,16 +110,14 @@ func PopulateVoters(db *gorm.DB) {
 	})
 }
 
-/*
 func PopulateElection(db *gorm.DB) {
-	var time time.Time
 	db.Create(&models.Election{
 		Title:             "제 101호 부학생회장",
 		Major:             "",
 		College:           "종합대학",
 		Content:           "부학생회장선거",
-		ElectionStartTime:
-		ElectionEndTime:   201210101110,
+		ElectionStartTime: "1541989543",
+		ElectionEndTime:   "1542690743",
 		State:             1,
 		Id:                98,
 		AdminId:           "201202274",
@@ -150,7 +145,7 @@ func PopulateElection(db *gorm.DB) {
 		AdminId:           "201202274",
 	})
 }
-*/
+
 func PopulateCandidates(db *gorm.DB) {
 	db.Create(&models.Candidate{
 		StudentId:  "201301923",
