@@ -119,14 +119,15 @@ func UnixToTimestamp(unixtime string) time.Time {
 	tm := time.Unix(i, 0)
 	return tm
 }
+
 func PopulateElection(db *gorm.DB) {
 	db.Create(&models.Election{
 		Title:             "제 101호 부학생회장",
 		Major:             "",
 		College:           "종합대학",
 		Content:           "부학생회장선거",
-		ElectionStartTime: UnixToTimestamp("1542690743"),
-		ElectionEndTime:   UnixToTimestamp("1542690743"),
+		ElectionStartTime: "2018-11-12 12:23:00",
+		ElectionEndTime:   "2018-11-12 12:23:00",
 		State:             1,
 		Id:                98,
 		AdminId:           "201202274",
@@ -136,8 +137,8 @@ func PopulateElection(db *gorm.DB) {
 		Major:             "",
 		College:           "종합대학",
 		Content:           "종합대학회장선거",
-		ElectionStartTime: UnixToTimestamp("1541989543"),
-		ElectionEndTime:   UnixToTimestamp("1542690743"),
+		ElectionStartTime: "2018-11-12 12:23:00",
+		ElectionEndTime:   "2018-11-12 12:23:00",
 		State:             2,
 		Id:                99,
 		AdminId:           "201202274",
@@ -147,8 +148,8 @@ func PopulateElection(db *gorm.DB) {
 		Major:             "컴퓨터공학과",
 		College:           "공과대학",
 		Content:           "컴퓨터공학과회장선거",
-		ElectionStartTime: UnixToTimestamp("1541989543"),
-		ElectionEndTime:   UnixToTimestamp("1542690743"),
+		ElectionStartTime: "2018-11-12 12:23:00",
+		ElectionEndTime:   "2018-11-12 12:23:00",
 		State:             3,
 		Id:                100,
 		AdminId:           "201202274",
@@ -158,8 +159,8 @@ func PopulateElection(db *gorm.DB) {
 		Major:             "테스트",
 		College:           "테스트",
 		Content:           "테스트",
-		ElectionStartTime: UnixToTimestamp("1543740600"),
-		ElectionEndTime:   UnixToTimestamp("1543740630"),
+		ElectionStartTime: "2018-12-02 21:25:00",
+		ElectionEndTime:   "2018-12-02 21:25:10",
 		State:             1,
 		Id:                101,
 		AdminId:           "201202274",
@@ -188,9 +189,3 @@ func PopulateCandidates(db *gorm.DB) {
 		ElectionId: 101,
 	})
 }
-
-/*
-func PopulateCandidates(db *gorm.DB) {
-	db.Create(&models.Voter{})
-}
-*/
