@@ -34,13 +34,27 @@ func AdminGetElectionInfo(id int) models.Election {
 	var election models.Election
 	db := votingdb
 
-	db.Where("id=?", id).
+	db.Model(&models.Election{}).
+		Where("id=?", id).
 		First(&election)
 
 	return election
 }
 
+func AdminGetElectionCandidateList(electionid int) models.Candidates {
+	var candidates models.Candidates
+
+	db := votingdb
+	db.Model(&models.Candidate{}).
+		Where("election_id=?", electionid).
+		Find(&candidates)
+
+	return candidates
+}
+
 func AdminCreateElection(election models.Election) (models.Election, error) {
+	//var t1, t2 time.Time
+
 	record := models.Election{
 		Title:             election.Title,
 		Major:             election.Major,
@@ -48,9 +62,9 @@ func AdminCreateElection(election models.Election) (models.Election, error) {
 		Content:           election.Content,
 		ElectionStartTime: election.ElectionStartTime,
 		ElectionEndTime:   election.ElectionEndTime,
-		State:             election.State, // defualt로 1, 선거 전 으로 해야 하나
-		Id:                election.Id,    // 이것도 자동으로 auto_increment
-		AdminId:           election.AdminId,
+		//State:             election.State, // defualt로 1, 선거 전 으로 해야 하나
+		Id:      election.Id, // 이것도 자동으로 auto_increment
+		AdminId: election.AdminId,
 	}
 	db := votingdb
 	err := db.Set("gorm:save_associations", false).
@@ -186,7 +200,7 @@ func AdminElectionResultCandidates(electionid int) models.EndElectionResult {
 	db := votingdb
 	db.Model(&models.EndElectionCandidateInfo{}).
 		Where("election_id=?", electionid).
-		Order("desc poll").
+		Order("poll desc").
 		Find(&candidates)
 
 	return candidates

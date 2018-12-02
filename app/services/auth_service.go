@@ -53,10 +53,9 @@ func CreateVoter(account models.Voter) (models.Voter, error) {
 	hashedPassword := GenerateHashedPassword(account.Password)
 
 	record := models.Voter{
-		Id:        account.Id,
+		StudentId: account.StudentId,
 		Password:  hashedPassword,
 		Name:      account.Name,
-		StudentId: account.StudentId,
 		Major:     account.Major,
 		College:   account.College,
 		Mobile:    account.Mobile,

@@ -23,8 +23,8 @@ func AdminGetElectionsList(c *gin.Context) {
 	list = services.AdminGetElectionsList(pagination)
 
 	if len(list) <= 0 {
-		c.JSON(404, gin.H{
-			"status": 404,
+		c.JSON(400, gin.H{
+			"status": 400,
 			"error":  "생성된 선거가 없습니다",
 		})
 	} else {
@@ -44,8 +44,8 @@ func AdminGetElectionInfo(c *gin.Context) {
 	election := services.AdminGetElectionInfo(electionId)
 
 	if election == (models.Election{}) {
-		c.JSON(404, gin.H{
-			"status": 404,
+		c.JSON(400, gin.H{
+			"status": 400,
 			"error":  "등록된 선거가 없습니다",
 		})
 	} else {
@@ -55,7 +55,25 @@ func AdminGetElectionInfo(c *gin.Context) {
 		})
 	}
 }
+func AdminGetElectionCandidatesList(c *gin.Context) {
+	electionId, err := strconv.Atoi(c.Params.ByName("electionid"))
+	if err != nil {
+		panic(err)
+	}
+	candidates := services.AdminGetElectionCandidateList(electionId)
 
+	if len(candidates) <= 0 {
+		c.JSON(200, gin.H{
+			"status": 200,
+			"error":  "해당 선거엔 후보자가 없습니다",
+		})
+	} else {
+		c.JSON(200, gin.H{
+			"status":    200,
+			"candidate": candidates,
+		})
+	}
+}
 func AdminCreateElection(c *gin.Context) {
 	var request models.Election
 	c.ShouldBindJSON(&request)
@@ -84,8 +102,8 @@ func AdminStartElection(c *gin.Context) {
 	election := services.AdminGetElectionInfo(electionId)
 
 	if election == (models.Election{}) {
-		c.JSON(404, gin.H{
-			"status": 404,
+		c.JSON(400, gin.H{
+			"status": 400,
 			"error":  "등록된 선거가 없습니다",
 		})
 	} else {
@@ -114,8 +132,8 @@ func AdminEndElection(c *gin.Context) {
 	election := services.AdminGetElectionInfo(electionId)
 
 	if election == (models.Election{}) {
-		c.JSON(404, gin.H{
-			"status": 404,
+		c.JSON(400, gin.H{
+			"status": 400,
 			"error":  "등록된 선거가 없습니다",
 		})
 	} else {
@@ -144,8 +162,8 @@ func AdminEditElection(c *gin.Context) {
 	election := services.AdminGetElectionInfo(electionId)
 
 	if election == (models.Election{}) {
-		c.JSON(404, gin.H{
-			"status": 404,
+		c.JSON(400, gin.H{
+			"status": 400,
 			"error":  "등록된 선거가 없습니다",
 		})
 	} else {
@@ -188,8 +206,8 @@ func AdminElectionResult(c *gin.Context) {
 	endElections := services.AdminElectionResult(pagination)
 
 	if len(endElections) <= 0 {
-		c.JSON(404, gin.H{
-			"status": 404,
+		c.JSON(400, gin.H{
+			"status": 400,
 			"error":  "완료된 선거가 없습니다",
 		})
 	} else {
@@ -220,8 +238,8 @@ func AdminGetCandidatesList(c *gin.Context) {
 	list = services.AdminGetCandidatesList(pagination)
 
 	if len(list) <= 0 {
-		c.JSON(200, gin.H{
-			"status": 200,
+		c.JSON(400, gin.H{
+			"status": 400,
 			"error":  "생성된 후보자가 없습니다",
 		})
 	} else {
@@ -241,8 +259,8 @@ func AdminCandidateInfo(c *gin.Context) {
 	candidate := services.AdminGetCandidateInfo(candidateId)
 
 	if candidate == (models.Candidate{}) {
-		c.JSON(404, gin.H{
-			"status": 404,
+		c.JSON(400, gin.H{
+			"status": 400,
 			"error":  "등록된 후보자가 없습니다",
 		})
 	} else {
@@ -281,8 +299,8 @@ func AdminEditCandidate(c *gin.Context) {
 	candidate := services.AdminGetCandidateInfo(candidateId)
 
 	if candidate == (models.Candidate{}) {
-		c.JSON(404, gin.H{
-			"status": 404,
+		c.JSON(400, gin.H{
+			"status": 400,
 			"error":  "등록된 후보자가 없습니다",
 		})
 	} else {

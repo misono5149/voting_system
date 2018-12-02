@@ -1,6 +1,7 @@
 package services
 
 import (
+	"time"
 	"voting_system/app/helpers"
 	"voting_system/app/services/models"
 )
@@ -16,24 +17,23 @@ func VoterGetElectionsList(pagination helpers.Pagination) models.Elections {
 	return elections
 }
 
-func VoterGetPossibleElectionsList(pagination helpers.Pagination) models.Elections {
-	var posElections models.Elections
+func VoterGetElectionInfo(electionid int) models.Election {
+	var election models.Election
 
 	db := votingdb
-	db.Limit(pagination.ItemPerPage).
-		Offset(pagination.StartIndex).
-		Order("id desc").
-		Where("state=?", "on").
-		Find(&posElections)
+	db.Model(&models.Election{}).
+		Where("id=?", electionid).
+		First(&election)
 
-	return posElections
+	return election
 }
 
 func VoterGetElectionCandidatesList(electionid int) models.Candidates {
 	var candidates models.Candidates
 
 	db := votingdb
-	db.Where("election_id=?", electionid).
+	db.Model(&models.Candidate{}).
+		Where("election_id=?", electionid).
 		Find(&candidates)
 
 	return candidates
@@ -42,7 +42,8 @@ func VoterGetElectionCandidatesList(electionid int) models.Candidates {
 func VoterGetCandidateInfo(candidateid int) models.Candidate {
 	var candidate models.Candidate
 	db := votingdb
-	db.Where("id=?", candidateid).
+	db.Model(&models.Candidate{}).
+		Where("id=?", candidateid).
 		First(&candidate)
 
 	return candidate
@@ -62,38 +63,29 @@ func VoterVoting(electionid, candidateid int) error {
 	return err
 }
 
-// return 값: election_id, elected_candidate_id, all_vote, 해당 선거 후보자 결과 리스트
-func VoterGetElectionResult(electionid int) (int, int, int, models.EndElectionResult) {
-	var endElectionResult models.EndElectionResult
-	var endElection models.Election
-	var electedCandidate models.EndElectionCandidateInfo
+func VoterGetElectionResult() models.Elections {
+	var endElections models.Elections
 
 	db := votingdb
-	err := db.Model(&models.Election{}).
-		Where("election_id=?", electionid).
-		Find(&endElection).Error
+	db.Where("state=?", 3).
+		Find(&endElections)
 
-	if err != nil {
-		panic(err)
-	}
+	return endElections
+}
 
-	// 해당 선거 총 투표수
-	var all_vote int
-	db.Model(&models.Voting{}).
-		Where("election_id=?", electionid).
-		Count(&all_vote)
+func VoterGetElectionResultCandidate(electionid int) models.EndElectionResult {
+	var candidates models.EndElectionResult
 
-	// 해당 선거 선출자
+	db := votingdb
 	db.Model(&models.EndElectionCandidateInfo{}).
 		Where("election_id=?", electionid).
-		Order("desc poll").
-		First(&electedCandidate)
+		Order("poll desc").
+		Find(&candidates)
 
-	// 해당 선거 후보자 결과 리스트
-	db.Model(&models.EndElectionCandidateInfo{}).
-		Where("election_id=?", electionid).
-		Order("desc poll").
-		Find(&endElectionResult)
+	return candidates
+}
 
-	return endElection.Id, electedCandidate.ElectionId, all_vote, endElectionResult
+func GetServerTime() int64 {
+	currentTime := time.Now().Unix()
+	return currentTime
 }

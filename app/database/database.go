@@ -1,6 +1,8 @@
 package database
 
 import (
+	"strconv"
+	"time"
 	"voting_system/app/services/models"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -9,7 +11,8 @@ import (
 )
 
 func GetConnection() *gorm.DB {
-	db, err := gorm.Open("mysql", "root:root@tcp(127.0.0.1:3306)/votingDB?charset=utf8&parseTime=True&loc=Local")
+	db, err := gorm.Open("mysql", "root:12345678@tcp(127.0.0.1:3306)/votingDB?charset=utf8&parseTime=True&loc=Local")
+
 	if err != nil {
 		panic("failed to connect database")
 	}
@@ -50,6 +53,7 @@ func AddForeignKeys(db *gorm.DB) {
 
 func AutoPopulate(db *gorm.DB) {
 	PopulateAdmins(db)
+	PopulateVoters(db)
 	PopulateElection(db)
 	PopulateCandidates(db)
 }
@@ -93,14 +97,36 @@ func PopulateAdmins(db *gorm.DB) {
 	})
 }
 
+func PopulateVoters(db *gorm.DB) {
+	db.Create(&models.Voter{
+		StudentId: "201202274",
+		Password:  "1111",
+		Name:      "윤인배",
+		Major:     "컴퓨터공학과",
+		College:   "공과대학",
+		Mobile:    "010-2786-2455",
+		Address:   "서초구 내곡동",
+		Email:     "iby2455@naver.com",
+		Sex:       "M",
+		Birth:     "1993-10-19",
+	})
+}
+func UnixToTimestamp(unixtime string) time.Time {
+	i, err := strconv.ParseInt(unixtime, 10, 64)
+	if err != nil {
+		panic(err)
+	}
+	tm := time.Unix(i, 0)
+	return tm
+}
 func PopulateElection(db *gorm.DB) {
 	db.Create(&models.Election{
 		Title:             "제 101호 부학생회장",
 		Major:             "",
 		College:           "종합대학",
 		Content:           "부학생회장선거",
-		ElectionStartTime: "1541989543",
-		ElectionEndTime:   "1542690743",
+		ElectionStartTime: UnixToTimestamp("1542690743"),
+		ElectionEndTime:   UnixToTimestamp("1542690743"),
 		State:             1,
 		Id:                98,
 		AdminId:           "201202274",
@@ -110,8 +136,8 @@ func PopulateElection(db *gorm.DB) {
 		Major:             "",
 		College:           "종합대학",
 		Content:           "종합대학회장선거",
-		ElectionStartTime: "1541989543",
-		ElectionEndTime:   "1542690743",
+		ElectionStartTime: UnixToTimestamp("1541989543"),
+		ElectionEndTime:   UnixToTimestamp("1542690743"),
 		State:             2,
 		Id:                99,
 		AdminId:           "201202274",
@@ -121,10 +147,21 @@ func PopulateElection(db *gorm.DB) {
 		Major:             "컴퓨터공학과",
 		College:           "공과대학",
 		Content:           "컴퓨터공학과회장선거",
-		ElectionStartTime: "1541989543",
-		ElectionEndTime:   "1542690743",
+		ElectionStartTime: UnixToTimestamp("1541989543"),
+		ElectionEndTime:   UnixToTimestamp("1542690743"),
 		State:             3,
 		Id:                100,
+		AdminId:           "201202274",
+	})
+	db.Create(&models.Election{
+		Title:             "테스트",
+		Major:             "테스트",
+		College:           "테스트",
+		Content:           "테스트",
+		ElectionStartTime: UnixToTimestamp("1543740600"),
+		ElectionEndTime:   UnixToTimestamp("1543740630"),
+		State:             1,
+		Id:                101,
 		AdminId:           "201202274",
 	})
 }
@@ -140,4 +177,20 @@ func PopulateCandidates(db *gorm.DB) {
 		Id:         13,
 		ElectionId: 99,
 	})
+	db.Create(&models.Candidate{
+		StudentId:  "00000000",
+		Name:       "아라링",
+		Major:      "고양이학과",
+		College:    "동물대학",
+		Thumbnail:  "aaa",
+		Resume:     "ddd",
+		Id:         15,
+		ElectionId: 101,
+	})
 }
+
+/*
+func PopulateCandidates(db *gorm.DB) {
+	db.Create(&models.Voter{})
+}
+*/

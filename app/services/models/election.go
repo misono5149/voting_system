@@ -1,15 +1,19 @@
 package models
 
+import (
+	"time"
+)
+
 type Election struct {
-	Title             string `json:"title"`
-	Major             string `json:"major"`
-	College           string `json:"college"`
-	Content           string `json:"content"`
-	ElectionStartTime string `json:"start_time"`
-	ElectionEndTime   string `json:"end_time"`
-	State             int    `json:"state"`
-	Id                int    `json:"election_id"`
-	AdminId           string `json:"admin"`
+	Title             string    `json:"title"`
+	Major             string    `json:"major"`
+	College           string    `json:"college"`
+	Content           string    `json:"content"`
+	ElectionStartTime time.Time `json:"start_time"`
+	ElectionEndTime   time.Time `json:"end_time"`
+	State             int       `json:"state"`
+	Id                int       `json:"election_id" gorm:"default=0, primary_key, auto_increment"`
+	AdminId           string    `json:"admin"`
 }
 
 /*
@@ -17,11 +21,11 @@ type Election struct {
 */
 
 type EndElectionCandidateInfo struct {
-	ElectionId  int    `json:"election_id"`
-	All_vote    int    `json:"all_vote"`
+	ElectionId  int    `json:"election_id" gorm:"primary_key, not_null"`
+	All_vote    int    `json:"all_vote" gorm:"not_null"`
 	CandidateId int    `json:"candidate_id"`
 	Poll        int    `json:"poll"`
-	StudentId   string `json:"strudent_id"`
+	StudentId   string `json:"student_id"`
 	Name        string `json:"name"`
 	Major       string `json:"major"`
 	College     string `json:"college"`
