@@ -1,6 +1,7 @@
 package services
 
 import (
+	"time"
 	"voting_system/app/helpers"
 	"voting_system/app/services/models"
 )
@@ -82,4 +83,9 @@ func VoterGetElectionResultCandidate(electionid int) models.EndElectionResult {
 		Find(&candidates)
 
 	return candidates
+}
+
+func GetServerTime() int64 {
+	currentTime := time.Now().Unix()
+	return currentTime
 }

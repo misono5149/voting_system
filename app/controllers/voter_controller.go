@@ -133,3 +133,12 @@ func VoterGetElectionResult(c *gin.Context) {
 		}
 	}
 }
+
+func GetServerTime(c *gin.Context) {
+	currentTime := services.GetServerTime()
+
+	c.JSON(200, gin.H{
+		"status":       200,
+		"current_time": currentTime,
+	})
+}

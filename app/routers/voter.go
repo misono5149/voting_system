@@ -13,4 +13,6 @@ func AddRoutesVoter(r *gin.RouterGroup) {
 	r.GET("/voter/elections/result", controllers.VoterGetElectionResult)
 	r.GET("/voter/candidates/:candidateid", controllers.VoterGetCandidateInfo)
 	r.POST("/voter/elections/voting", controllers.VoterVoting)
+
+	r.GET("/servertime", controllers.GetServerTime)
 }
