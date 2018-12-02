@@ -9,9 +9,9 @@ import (
 func VoterGetElectionsList(pagination helpers.Pagination) models.Elections {
 	var elections models.Elections
 	db := votingdb
-	db.Limit(pagination.ItemPerPage).
+	db.Order("id desc").
+		Limit(pagination.ItemPerPage).
 		Offset(pagination.StartIndex).
-		Order("id desc").
 		Find(&elections)
 
 	return elections
