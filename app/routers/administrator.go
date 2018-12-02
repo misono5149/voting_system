@@ -2,9 +2,7 @@ package routers
 
 import (
 	"voting_system/app/controllers"
-
 	"github.com/gin-gonic/gin"
-	"log"
 )
 
 func AddRoutesAdministrator(r *gin.RouterGroup) {
