@@ -23,6 +23,7 @@ func CountRowsElection() int {
 func AdminGetElectionsList(pagination helpers.Pagination) models.Elections {
 	var elections models.Elections
 	db := votingdb
+
 	db.Limit(pagination.ItemPerPage).
 		Offset(pagination.StartIndex).
 		Order("id desc").

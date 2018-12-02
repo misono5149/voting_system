@@ -15,7 +15,6 @@ type Election struct {
 /*
 [state] 1: 투표 전 2: 투표 중 3: 투표 완료
 */
-
 type EndElectionCandidateInfo struct {
 	ElectionId  int    `json:"election_id" gorm:"primary_key, not_null"`
 	All_vote    int    `json:"all_vote" gorm:"not_null"`
@@ -31,3 +30,12 @@ type EndElectionCandidateInfo struct {
 
 type Elections []Election
 type EndElectionResult []EndElectionCandidateInfo
+
+type EndElection struct {
+	ElectionId        int               `json:"election_id"`
+	Title             string            `json:"title"`
+	ElectionStartTime string            `json:"start_time"`
+	ElectionEndTime   string            `json:"end_time"`
+	State             int               `json:"state"`
+	Candidate         EndElectionResult `json:"candidate"`
+}
