@@ -25,6 +25,7 @@ func AdminGetElectionsList(pagination helpers.Pagination) models.Elections {
 	db := votingdb
 	db.Limit(pagination.ItemPerPage).
 		Offset(pagination.StartIndex).
+		Order("id desc").
 		Find(&elections)
 
 	return elections
@@ -53,8 +54,6 @@ func AdminGetElectionCandidateList(electionid int) models.Candidates {
 }
 
 func AdminCreateElection(election models.Election) (models.Election, error) {
-	//var t1, t2 time.Time
-
 	record := models.Election{
 		Title:             election.Title,
 		Major:             election.Major,
@@ -62,9 +61,7 @@ func AdminCreateElection(election models.Election) (models.Election, error) {
 		Content:           election.Content,
 		ElectionStartTime: election.ElectionStartTime,
 		ElectionEndTime:   election.ElectionEndTime,
-		//State:             election.State, // defualt로 1, 선거 전 으로 해야 하나
-		Id:      election.Id, // 이것도 자동으로 auto_increment
-		AdminId: election.AdminId,
+		AdminId:           election.AdminId,
 	}
 	db := votingdb
 	err := db.Set("gorm:save_associations", false).
@@ -189,6 +186,7 @@ func AdminElectionResult(pagination helpers.Pagination) models.Elections {
 	db.Limit(pagination.ItemPerPage).
 		Offset(pagination.StartIndex).
 		Where("state=?", 3).
+		Order("id desc").
 		Find(&endElections)
 
 	return endElections
