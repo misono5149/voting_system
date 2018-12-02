@@ -122,15 +122,20 @@ func VoterGetElectionResult(c *gin.Context) {
 			"error":  "완료된 선거가 없습니다",
 		})
 	} else {
+		result := make([]models.EndElection, len(endElections))
 		for i := 0; i < len(endElections); i++ {
-			var results models.EndElectionResult
-			results = services.VoterGetElectionResultCandidate(endElections[i].Id)
-			c.JSON(200, gin.H{
-				"status":        200,
-				"election_info": endElections[i],
-				"result":        results,
-			})
+			result[i].ElectionId = endElections[i].Id
+			result[i].Title = endElections[i].Title
+			result[i].ElectionStartTime = endElections[i].ElectionStartTime
+			result[i].ElectionEndTime = endElections[i].ElectionEndTime
+			result[i].State = endElections[i].State
+			result[i].Candidate = services.VoterGetElectionResultCandidate(endElections[i].Id)
 		}
+
+		c.JSON(200, gin.H{
+			"status":   200,
+			"election": result,
+		})
 	}
 }
 
