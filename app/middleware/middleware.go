@@ -1,79 +1,66 @@
 package middleware
 
 import (
-	"net/http"
+	"log"
 	"time"
 	"voting_system/app/services"
 	"voting_system/app/services/models"
 
-	ginJwt "github.com/appleboy/gin-jwt"
+	jwt "github.com/appleboy/gin-jwt"
 	"github.com/gin-gonic/gin"
 )
 
-type Login struct {
-	StudentId string `json:"student_id"`
-	Password  string `json:"password"`
+type login struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
-const JWT_KEY = "apple"
+var identityKey = "id"
 
-func RenderData(data interface{}, ctx *gin.Context) {
-	meta := gin.H{
-		"status_code": http.StatusOK,
-		"error":       false,
-	}
-
-	body := gin.H{
-		"data":   data,
-		"errors": false,
-		"meta":   meta,
-	}
-
-	RenderResponse(&body, http.StatusOK, ctx)
-}
-
-func RenderErrorSingle(message string, status int, ctx *gin.Context) {
-	meta := gin.H{
-		"status_code": status,
-		"error":       true,
-	}
-
-	body := gin.H{
-		"data":   nil,
-		"errors": message,
-		"meta":   meta,
-	}
-
-	RenderResponse(&body, status, ctx)
-}
-
-func RenderResponse(body *gin.H, status int, ctx *gin.Context) {
-	ctx.IndentedJSON(status, body)
-}
-
-func GinJWTMiddlewareHandler() *ginJwt.GinJWTMiddleware {
-	authMiddleware := &ginJwt.GinJWTMiddleware{
-		Realm:      "voting api",
-		Key:        []byte(JWT_KEY),
-		Timeout:    time.Hour,
-		MaxRefresh: time.Hour,
-		Authenticator: func(c *gin.Context) (interface{}, error) {
-			var loginVals Login
-			if err := c.ShouldBind(&loginVals); err != nil {
-				return "", ginJwt.ErrMissingLoginValues
+func GinJWTMiddlewareHandler() *jwt.GinJWTMiddleware {
+	authMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{
+		Realm:       "test zone",
+		Key:         []byte("secret key"),
+		Timeout:     time.Hour,
+		MaxRefresh:  time.Hour,
+		IdentityKey: identityKey,
+		PayloadFunc: func(data interface{}) jwt.MapClaims {
+			if v, ok := data.(*models.Voter); ok {
+				return jwt.MapClaims{
+					identityKey: v.StudentId,
+				}
 			}
-			userId := loginVals.StudentId
+			return jwt.MapClaims{}
+		},
+		IdentityHandler: func(c *gin.Context) interface{} {
+			claims := jwt.ExtractClaims(c)
+			return &models.Voter{
+				StudentId: claims["id"].(string),
+			}
+		},
+		Authenticator: func(c *gin.Context) (interface{}, error) {
+			var loginVals login
+			if err := c.ShouldBind(&loginVals); err != nil {
+				return "", jwt.ErrMissingLoginValues
+			}
+			studentId := loginVals.Username
 			password := loginVals.Password
 
-			voter := services.GetVoterInfo(userId, password)
-
+			voter := services.GetVoterInfo(studentId, password)
 			if voter != (models.Voter{}) {
 				return &models.Voter{
-					StudentId: userId,
+					StudentId: studentId,
 					Name:      voter.Name,
 				}, nil
 			}
-			return nil, ginJwt.ErrFailedAuthentication
+			return nil, jwt.ErrFailedAuthentication
+		},
+		Authorizator: func(data interface{}, c *gin.Context) bool {
+			if _, ok := data.(*models.Voter); ok {
+				return true
+			}
+
+			return false
 		},
 		Unauthorized: func(c *gin.Context, code int, message string) {
 			c.JSON(code, gin.H{
@@ -81,10 +68,26 @@ func GinJWTMiddlewareHandler() *ginJwt.GinJWTMiddleware {
 				"message": message,
 			})
 		},
+		// TokenLookup is a string in the form of "<source>:<name>" that is used
+		// to extract token from the request.
+		// Optional. Default value "header:Authorization".
+		// Possible values:
+		// - "header:<name>"
+		// - "query:<name>"
+		// - "cookie:<name>"
+		// - "param:<name>"
+		TokenLookup: "header: Authorization, query: token, cookie: jwt",
+		// TokenLookup: "query:token",
+		// TokenLookup: "cookie:token",
 
-		TokenLookup:   "header:Authorization",
+		// TokenHeadName is a string in the header. Default value is "Bearer"
 		TokenHeadName: "Bearer",
-		TimeFunc:      time.Now,
+
+		// TimeFunc provides the current time. You can override it to use another time value. This is useful for testing or if your server uses a different time zone than your tokens.
+		TimeFunc: time.Now,
+	})
+	if err != nil {
+		log.Fatal(err)
 	}
 	return authMiddleware
 }
