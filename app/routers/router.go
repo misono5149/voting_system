@@ -9,8 +9,10 @@ import (
 
 func InitRoutes() *gin.Engine {
 	r := gin.New()
-
+	r.Use(gin.Logger())
+	r.Use(gin.Recovery())
 	r.Use(cors.Default())
+
 	v1 := r.Group("/")
 
 	AddRoutesAuth(v1)
