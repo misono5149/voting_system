@@ -1,17 +1,24 @@
 package routers
 
 import (
+	"voting_system/app/middleware"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 func InitRoutes() *gin.Engine {
-	r := gin.Default()
+	r := gin.New()
+
+	r.Use(cors.Default())
 	v1 := r.Group("/")
-	v1.Use(cors.Default())
+
+	AddRoutesAuth(v1)
+	AddRoutesAdministrator(v1)
+
+	v1.Use(middleware.GinJWTMiddlewareHandler().MiddlewareFunc())
 	{
 		AddRoutesVoter(v1)
-		AddRoutesAdministrator(v1)
 	}
 	return r
 }

@@ -61,7 +61,7 @@ func AutoPopulate(db *gorm.DB) {
 func PopulateAdmins(db *gorm.DB) {
 	db.Create(&models.Administrator{
 		Id:        "201202274",
-		Password:  "000000",
+		Password:  "201202274",
 		Name:      "윤인배",
 		Mobile:    "010-2786-2455",
 		Ssn:       "",
@@ -97,20 +97,6 @@ func PopulateAdmins(db *gorm.DB) {
 	})
 }
 
-func PopulateVoters(db *gorm.DB) {
-	db.Create(&models.Voter{
-		StudentId: "201202274",
-		Password:  "1111",
-		Name:      "윤인배",
-		Major:     "컴퓨터공학과",
-		College:   "공과대학",
-		Mobile:    "010-2786-2455",
-		Address:   "서초구 내곡동",
-		Email:     "iby2455@naver.com",
-		Sex:       "M",
-		Birth:     "1993-10-19",
-	})
-}
 func UnixToTimestamp(unixtime string) time.Time {
 	i, err := strconv.ParseInt(unixtime, 10, 64)
 	if err != nil {
@@ -187,5 +173,152 @@ func PopulateCandidates(db *gorm.DB) {
 		Resume:     "ddd",
 		Id:         15,
 		ElectionId: 101,
+	})
+}
+
+func PopulateVoters(db *gorm.DB) {
+	db.Create(&models.Voter{
+		StudentId: "201202274",
+		Password:  "201202274",
+		Name:      "윤인배",
+		Major:     "컴퓨터공학과",
+		College:   "공과대학",
+		Mobile:    "010-2786-2455",
+		Address:   "서초구 내곡동",
+		Email:     "iby2455@naver.com",
+		Sex:       "M",
+		Birth:     "1993-10-19",
+	})
+	db.Create(&models.Voter{
+		StudentId: "201200000",
+		Password:  "201200000",
+		Name:      "김영영",
+		Major:     "컴퓨터공학과",
+		College:   "공과대학",
+		Mobile:    "010-0000-0000",
+		Address:   "강남구",
+		Email:     "koo@gmail.com",
+		Sex:       "M",
+		Birth:     "1993-01-01",
+	})
+	db.Create(&models.Voter{
+		StudentId: "201200001",
+		Password:  "201200001",
+		Name:      "김영일",
+		Major:     "컴퓨터공학과",
+		College:   "공과대학",
+		Mobile:    "010-0000-0001",
+		Address:   "강남구",
+		Email:     "asd@gmail.com",
+		Sex:       "F",
+		Birth:     "1993-01-02",
+	})
+	db.Create(&models.Voter{
+		StudentId: "201200002",
+		Password:  "201200002",
+		Name:      "김영이",
+		Major:     "컴퓨터공학과",
+		College:   "공과대학",
+		Mobile:    "010-0000-0002",
+		Address:   "강남구",
+		Email:     "zxdc@gmail.com",
+		Sex:       "F",
+		Birth:     "1993-01-03",
+	})
+	db.Create(&models.Voter{
+		StudentId: "201200003",
+		Password:  "201200003",
+		Name:      "김영삼",
+		Major:     "컴퓨터공학과",
+		College:   "공과대학",
+		Mobile:    "010-0000-0003",
+		Address:   "강남구",
+		Email:     "ekf@gmail.com",
+		Sex:       "M",
+		Birth:     "1993-10-03",
+	})
+	db.Create(&models.Voter{
+		StudentId: "201200004",
+		Password:  "201200004",
+		Name:      "김영사",
+		Major:     "컴퓨터공학과",
+		College:   "공과대학",
+		Mobile:    "010-0000-0004",
+		Address:   "강남구",
+		Email:     "dnwi@gmail.com",
+		Sex:       "M",
+		Birth:     "1992-03-01",
+	})
+	db.Create(&models.Voter{
+		StudentId: "201200005",
+		Password:  "201200005",
+		Name:      "김영오",
+		Major:     "컴퓨터공학과",
+		College:   "공과대학",
+		Mobile:    "010-0000-0005",
+		Address:   "강남구",
+		Email:     "efkj@gmail.com",
+		Sex:       "M",
+		Birth:     "1991-12-04",
+	})
+	db.Create(&models.Voter{
+		StudentId: "201200006",
+		Password:  "201200006",
+		Name:      "김영육",
+		Major:     "컴퓨터공학과",
+		College:   "공과대학",
+		Mobile:    "010-3920-1294",
+		Address:   "서초구",
+		Email:     "jwql@gmail.com",
+		Sex:       "F",
+		Birth:     "1994-09-29",
+	})
+	db.Create(&models.Voter{
+		StudentId: "201200007",
+		Password:  "201200007",
+		Name:      "안지수",
+		Major:     "컴퓨터공학과",
+		College:   "공과대학",
+		Mobile:    "010-1427-9434",
+		Address:   "강남구",
+		Email:     "jsl@gmail.com",
+		Sex:       "M",
+		Birth:     "1994-11-29",
+	})
+	db.Create(&models.Voter{
+		StudentId: "201200008",
+		Password:  "201200008",
+		Name:      "강형욱",
+		Major:     "컴퓨터공학과",
+		College:   "공과대학",
+		Mobile:    "010-2132-4223",
+		Address:   "은평구",
+		Email:     "flfa@gmail.com",
+		Sex:       "M",
+		Birth:     "1993-05-14",
+	})
+	db.Create(&models.Voter{
+		StudentId: "201200009",
+		Password:  "201200009",
+		Name:      "강형욱",
+		Major:     "컴퓨터공학과",
+		College:   "공과대학",
+		Mobile:    "010-2214-6323",
+		Address:   "수지구",
+		Email:     "kgwq@gmail.com",
+		Sex:       "M",
+		Birth:     "1993-03-18",
+	})
+	db.Create(&models.Voter{
+		StudentId: "201200010",
+		Password:  "201200010",
+		Name:      "전하수",
+		Major:     "컴퓨터공학과",
+		College:   "공과대학",
+		Mobile:    "010-3342-6223",
+		Address:   "도봉구",
+		Email:     "gk@gmail.com",
+		Sex:       "F",
+		Birth:     "1995-11-24",
 	})
 }

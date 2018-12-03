@@ -89,3 +89,14 @@ func GetServerTime() int64 {
 	currentTime := time.Now().Unix()
 	return currentTime
 }
+
+func GetVoterInfo(studentId, password string) models.Voter {
+	var voter models.Voter
+
+	db := votingdb
+	db.Model(&models.Voter{}).
+		Where("student_id=? AND password=?", studentId, password).
+		First(&voter)
+
+	return voter
+}
