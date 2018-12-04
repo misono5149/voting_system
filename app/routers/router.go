@@ -11,8 +11,12 @@ func InitRoutes() *gin.Engine {
 	r := gin.New()
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
-	r.Use(cors.Default())
-	r.Use(middleware.CORS())
+
+	config := cors.DefaultConfig()
+	config.AllowAllOrigins = true
+	config.ExposeHeaders = []string{"Authorization"}
+
+	r.Use(cors.New(config))
 
 	v1 := r.Group("/")
 
