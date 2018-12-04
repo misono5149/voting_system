@@ -12,6 +12,7 @@ func InitRoutes() *gin.Engine {
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
 	r.Use(cors.Default())
+	r.Use(middleware.CORS())
 
 	v1 := r.Group("/")
 
