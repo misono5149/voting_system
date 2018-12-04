@@ -6,7 +6,7 @@ import (
 	"voting_system/app/services"
 	"voting_system/app/services/models"
 
-	jwt "github.com/appleboy/gin-jwt"
+	ginJwt "github.com/appleboy/gin-jwt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,25 +15,27 @@ type login struct {
 	Password string `json:"password"`
 }
 
+const JWT_KEY = "secure_as_hell_key"
+
 var identityKey = "id"
 
-func GinJWTMiddlewareHandler() *jwt.GinJWTMiddleware {
-	authMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{
+func GinJWTMiddlewareHandler() *ginJwt.GinJWTMiddleware {
+	authMiddleware, err := ginJwt.New(&ginJwt.GinJWTMiddleware{
 		Realm:       "test zone",
-		Key:         []byte("secret key"),
+		Key:         []byte(JWT_KEY),
 		Timeout:     time.Hour,
 		MaxRefresh:  time.Hour,
 		IdentityKey: identityKey,
-		PayloadFunc: func(data interface{}) jwt.MapClaims {
+		PayloadFunc: func(data interface{}) ginJwt.MapClaims {
 			if v, ok := data.(*models.Voter); ok {
-				return jwt.MapClaims{
+				return ginJwt.MapClaims{
 					identityKey: v.StudentId,
 				}
 			}
-			return jwt.MapClaims{}
+			return ginJwt.MapClaims{}
 		},
 		IdentityHandler: func(c *gin.Context) interface{} {
-			claims := jwt.ExtractClaims(c)
+			claims := ginJwt.ExtractClaims(c)
 			return &models.Voter{
 				StudentId: claims["id"].(string),
 			}
@@ -41,7 +43,7 @@ func GinJWTMiddlewareHandler() *jwt.GinJWTMiddleware {
 		Authenticator: func(c *gin.Context) (interface{}, error) {
 			var loginVals login
 			if err := c.ShouldBind(&loginVals); err != nil {
-				return "", jwt.ErrMissingLoginValues
+				return "", ginJwt.ErrMissingLoginValues
 			}
 			studentId := loginVals.Username
 			password := loginVals.Password
@@ -53,14 +55,16 @@ func GinJWTMiddlewareHandler() *jwt.GinJWTMiddleware {
 					Name:      voter.Name,
 				}, nil
 			}
-			return nil, jwt.ErrFailedAuthentication
+			return nil, ginJwt.ErrFailedAuthentication
 		},
 		Authorizator: func(data interface{}, c *gin.Context) bool {
+
 			if _, ok := data.(*models.Voter); ok {
 				return true
 			}
 
 			return false
+
 		},
 		Unauthorized: func(c *gin.Context, code int, message string) {
 			c.JSON(code, gin.H{
@@ -76,7 +80,7 @@ func GinJWTMiddlewareHandler() *jwt.GinJWTMiddleware {
 		// - "query:<name>"
 		// - "cookie:<name>"
 		// - "param:<name>"
-		TokenLookup: "header: Authorization, query: token, cookie: jwt",
+		TokenLookup: "header: Authorization",
 		// TokenLookup: "query:token",
 		// TokenLookup: "cookie:token",
 
